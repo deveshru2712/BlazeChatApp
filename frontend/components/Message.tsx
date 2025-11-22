@@ -129,7 +129,7 @@ export default function Message({ User }: MessageProps) {
   if (!currentUser) return null;
 
   return (
-    <div className="h-full flex flex-col mx-6 py-4">
+    <div className="h-full flex flex-col px-0 md:mx-6 py-4">
       <div className="flex-1 flex flex-col gap-1 overflow-y-auto relative">
         <div className="top-0 sticky bg-background px-4">
           {User && <MessageNav isTyping={isTyping} user={User} />}

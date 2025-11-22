@@ -75,9 +75,9 @@ export default function AuthForm({ type }: { type: FormType }) {
         className={`${classes.border} border shadow-md lg:min-w-[566px] px-8 py-6 rounded-2xl`}
       >
         <div className="flex flex-col items-center gap-4">
-          <h1 className="text-4xl font-bold">
+          <h1 className="text-2xl md:text-4xl font-bold">
             {type == "sign-in" ? (
-              <div className="flex items-center gap-2">
+              <div className="flex flex-col md:flex-row items-center gap-0 md:gap-2">
                 <span className="animated-warm-gradient-text hover:brightness-110 transition-all duration-300 cursor-pointer">
                   Welcome
                 </span>
@@ -92,7 +92,7 @@ export default function AuthForm({ type }: { type: FormType }) {
               </div>
             )}
           </h1>
-          <span className="text-xl font-semibold">
+          <span className="text-center text-base md:text-xl font-semibold">
             {type == "sign-in"
               ? "Your messages are waiting. Log in to see them!"
               : "Sign up today, your messages are just a click away."}

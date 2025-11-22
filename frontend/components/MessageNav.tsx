@@ -17,12 +17,6 @@ const MessageNav = ({
     // Check if the current user is in the onlineUser array
     const userIsOnline = onlineUser.includes(id);
     setIsOnline(userIsOnline);
-
-    // console.log("MessageNav online check:", {
-    //   onlineUsers: onlineUser,
-    //   currentUserId: id,
-    //   isOnline: userIsOnline,
-    // });
   }, [onlineUser, id]);
 
   return (

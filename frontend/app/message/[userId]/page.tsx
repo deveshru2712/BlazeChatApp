@@ -15,7 +15,7 @@ export default function Page() {
       <Navbar />
       <div className="flex flex-1 w-full border-t border-slate-200/60 overflow-hidden">
         <Sidebar />
-        <div className="flex-1 h-full overflow-hidden mx-6 py-8">
+        <div className="flex-1 h-full overflow-hidden px-1 py-8">
           <Message User={receiverUser} />
         </div>
       </div>

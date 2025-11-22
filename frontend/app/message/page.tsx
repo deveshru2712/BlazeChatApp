@@ -1,3 +1,4 @@
+import MobileSearchBar from "@/components/MobileSearchBar ";
 import Navbar from "@/components/Navbar";
 import Sidebar from "@/components/Sidebar";
 import { MessageCircle, Search, Users } from "lucide-react";
@@ -6,9 +7,10 @@ export default function Page() {
   return (
     <div className="w-screen h-screen overflow-hidden flex flex-col">
       <Navbar />
-      <div className="flex flex-1 w-full border-t border-slate-200/60 overflow-hidden">
+      <div className="flex md:flex-row flex-col flex-1 w-full border-t border-slate-200/60 overflow-hidden">
+        <MobileSearchBar />
         <Sidebar />
-        <div className="flex-1 h-full overflow-hidden mx-6 py-8">
+        <div className="flex-1 h-full overflow-hidden px-6 py-8">
           <div className="flex flex-col justify-center items-center h-full max-w-md mx-auto text-center space-y-6">
             <div className="relative">
               <div className="w-24 h-24 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center shadow-lg shadow-blue-500/25">
