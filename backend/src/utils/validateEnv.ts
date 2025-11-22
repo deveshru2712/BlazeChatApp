@@ -6,9 +6,5 @@ export default cleanEnv(process.env, {
   AUTH_SECRET: str(),
   DATABASE_URL: str(),
   JWT_KEY: str(),
-  REDIS_USERNAME: str(),
-  REDIS_PASSWORD: str(),
-  REDIS_HOST: str(),
-  REDIS_PORT: port(),
   CLIENT_URL: str(),
 });

@@ -3,36 +3,27 @@ import env from "./validateEnv";
 import { CookieOptions } from "express";
 
 const genToken = (userId: string) => {
-  if (!userId || typeof userId != "string") {
+  if (!userId || typeof userId !== "string") {
     return {
       success: false,
       message: "Invalid userId",
     };
   }
 
-  try {
-    const token = jwt.sign({ userId: userId }, env.JWT_KEY, {
-      expiresIn: "7d",
-    });
+  const token = jwt.sign({ userId }, env.JWT_KEY, { expiresIn: "7d" });
 
-    const cookieOption: CookieOptions = {
-      secure: env.NODE_ENV == "production",
-      sameSite: "none",
-      httpOnly: true,
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    };
+  const cookieOption: CookieOptions = {
+    httpOnly: true,
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+    secure: env.NODE_ENV === "production",
+    sameSite: env.NODE_ENV === "production" ? "none" : "lax",
+  };
 
-    return {
-      success: true,
-      token,
-      cookieOption,
-    };
-  } catch (error) {
-    console.log(error);
-    return {
-      success: false,
-    };
-  }
+  return {
+    success: true,
+    token,
+    cookieOption,
+  };
 };
 
 export default genToken;

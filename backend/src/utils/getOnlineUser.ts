@@ -1,20 +1,11 @@
-import { redisClient } from "./redis/redisClient";
+import { activeUsers } from "../socket";
 
 export const getOnlineUser = async () => {
   try {
-    const activeKey = await redisClient.keys(`active:*`);
-    const onlineUsers = [];
-
-    for (const key of activeKey) {
-      const userId = await redisClient.get(key);
-      if (userId) {
-        onlineUsers.push(userId);
-      }
-    }
-    console.log("Current online users:", onlineUsers);
+    const onlineUsers = Array.from(activeUsers);
     return onlineUsers;
   } catch (error) {
-    console.log("Unable to fetch the list of all online user");
+    console.log("Unable to fetch the list of all online users");
     return [];
   }
 };

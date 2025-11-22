@@ -12,7 +12,6 @@ import messageRouter from "./routes/message.router";
 import userRouter from "./routes/user.router";
 
 import { app, server } from "./socket";
-import { redisClient } from "./utils/redis/redisClient";
 
 app.use(morgan("dev"));
 app.use(
@@ -77,6 +76,5 @@ app.use((error: unknown, req: Request, res: Response, next: NextFunction) => {
 });
 
 server.listen(env.PORT, async () => {
-  await redisClient.connect();
   console.log("Server is running on the port:", env.PORT);
 });

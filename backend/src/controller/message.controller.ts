@@ -2,7 +2,7 @@ import { RequestHandler } from "express";
 import { MessageType } from "../utils/schema/messageSchema";
 import prismaClient from "../utils/prismaClient";
 import { io } from "../socket";
-import { redisClient } from "../utils/redis/redisClient";
+import { activeSockets } from "../socket";
 
 export const getMessage: RequestHandler<
   { receiverId: string },
@@ -12,9 +12,8 @@ export const getMessage: RequestHandler<
 > = async (req, res, next) => {
   const senderId = req.user.id;
   const receiverId = req.params.receiverId;
-  try {
-    // these message are according to the time they were sent
 
+  try {
     if (!receiverId) {
       res.status(400).json({
         success: false,
@@ -39,14 +38,11 @@ export const getMessage: RequestHandler<
       return;
     }
 
-    // cache the message here
-
     res.status(200).json({
       success: true,
-      message: "successfully retrieved  message",
+      message: "successfully retrieved message",
       result: conversation.messages,
     });
-    return;
   } catch (error) {
     next(error);
   }
@@ -61,6 +57,7 @@ export const sendMessage: RequestHandler<
   const senderId = req.user.id;
   const receiverId = req.params.receiverId;
   const { message: content } = req.body;
+
   try {
     if (!receiverId) {
       res.status(400).json({
@@ -94,22 +91,17 @@ export const sendMessage: RequestHandler<
             },
           ],
         },
-        include: {
-          participants: { select: { id: true } },
-        },
+        include: { participants: { select: { id: true } } },
       });
 
-      // if conversation does not exists then create a new conversation
       if (!conversation) {
         conversation = await tx.conversation.create({
           data: {
-            participants: { connect: [{ id: senderId }, { id: receiverId }] },
-          },
-          include: {
             participants: {
-              select: { id: true },
+              connect: [{ id: senderId }, { id: receiverId }],
             },
           },
+          include: { participants: { select: { id: true } } },
         });
       }
 
@@ -126,11 +118,11 @@ export const sendMessage: RequestHandler<
               id: true,
               email: true,
               username: true,
-              // add profile pic
             },
           },
         },
       });
+
       return { message: newMessage, conversation };
     });
 
@@ -140,18 +132,18 @@ export const sendMessage: RequestHandler<
       conversationId: transaction.conversation,
     });
 
-    // joining the room
+    const senderSocketId = [...activeSockets.entries()].find(
+      ([, uid]) => uid === senderId
+    )?.[0];
 
-    const [senderSocketId, receiverSocketId] = await Promise.all([
-      redisClient.get(`user:${senderId}`),
-      redisClient.get(`user:${receiverId}`),
-    ]);
-
-    console.log(senderSocketId, receiverSocketId);
+    const receiverSocketId = [...activeSockets.entries()].find(
+      ([, uid]) => uid === receiverId
+    )?.[0];
 
     if (senderSocketId) {
       io.to(senderSocketId).socketsJoin(transaction.conversation.id);
     }
+
     if (receiverSocketId) {
       io.to(receiverSocketId).socketsJoin(transaction.conversation.id);
     }
@@ -164,14 +156,7 @@ export const sendMessage: RequestHandler<
       createdAt: transaction.message.createdAt,
     };
 
-    console.log(`Joining room ${transaction.conversation.id} for users:`, {
-      senderSocketId,
-      receiverSocketId,
-    });
-
     io.to(transaction.conversation.id).emit("receive-message", messageData);
-
-    return;
   } catch (error) {
     next(error);
   }
