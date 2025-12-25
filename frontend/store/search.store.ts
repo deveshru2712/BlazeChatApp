@@ -2,6 +2,7 @@ import api from "@/utils/Axios";
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 
+// search for user
 type SearchStore = SearchStoreState & SearchStoreActions;
 
 const searchStore = create<SearchStore>()(

@@ -1,14 +1,30 @@
 "use client";
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import MessageBox from "./MessageBox";
 import { Input } from "./ui/input";
 import SkeletonMessageBox from "./skeletons/SkeletonMessageBox";
 import { useRouter } from "next/navigation";
 import searchStore from "@/store/search.store";
 import { getLatestMessage } from "@/lib/getLatestMessage";
+import messageStore from "@/store/message.store";
+import authStore from "@/store/auth.store";
 
 export default function Sidebar() {
   const router = useRouter();
+  const { user } = authStore();
+
+  const { recentConversation, fetchRecentConversation } = messageStore();
+
+  useEffect(() => {
+    if (!user) return;
+
+    const loadConversations = async () => {
+      await fetchRecentConversation(user.id);
+      console.log("Recent Conversations:", recentConversation);
+    };
+
+    loadConversations();
+  }, [user?.id]);
 
   const {
     searchUsername,
@@ -28,7 +44,6 @@ export default function Sidebar() {
 
     return userList.map((user) => {
       const result = getLatestMessage(user.conversations);
-      console.log(result);
       return {
         ...user,
         latestMessage: result.latestMessage,

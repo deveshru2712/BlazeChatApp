@@ -3,6 +3,7 @@ import { create } from "zustand";
 import authStore from "./auth.store";
 import searchStore from "./search.store";
 
+// handles sending message logic
 type MessageStore = MessageStoreState & MessageStoreActions;
 
 const messageStore = create<MessageStore>((set, get) => ({
@@ -15,6 +16,16 @@ const messageStore = create<MessageStore>((set, get) => ({
   searchUsername: "",
   searchTimeoutId: null,
   isSearching: false,
+  recentConversation: [],
+  fetchRecentConversation: async (userId) => {
+    try {
+      const response = await api(`/api/user/${userId}`);
+      set({ recentConversation: response.data || [] });
+    } catch (error: unknown) {
+      set({ recentConversation: [] });
+      console.log("Error occurred while fetching recent conversation:", error);
+    }
+  },
   setMessageArr: (messageArr) => {
     set({ messageArr });
   },

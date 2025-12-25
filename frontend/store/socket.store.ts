@@ -3,6 +3,7 @@ import { io } from "socket.io-client";
 import authStore from "./auth.store";
 import { toast } from "sonner";
 
+// handles all the socket related stuff connecting, getting the online user list, typing status
 type SocketStore = SocketStoreState & SocketStoreActions;
 
 const socketStore = create<SocketStore>((set, get) => ({
@@ -13,10 +14,10 @@ const socketStore = create<SocketStore>((set, get) => ({
   isOnline: false,
   refreshInterval: null,
   searchOnlineUserInterval: null,
-  retryCount: 0,
-  maxRetries: 3,
-  retryDelay: 1000,
-  retryTimeout: null,
+  // retryCount: 0,
+  // maxRetries: 3,
+  // retryDelay: 1000,
+  // retryTimeout: null,
 
   setIsTyping: (value) => {
     set({ isTyping: value });
@@ -24,7 +25,7 @@ const socketStore = create<SocketStore>((set, get) => ({
 
   setSocket: () => {
     set({ isProcessing: true });
-    const { socket, retryCount, maxRetries } = get();
+    const { socket } = get();
     const { user } = authStore.getState();
 
     try {
@@ -52,7 +53,6 @@ const socketStore = create<SocketStore>((set, get) => ({
             socket: newSocket,
             isProcessing: false,
             isOnline: true,
-            retryCount: 0,
           });
           toast.success("User online 🔥");
         }
@@ -60,35 +60,6 @@ const socketStore = create<SocketStore>((set, get) => ({
 
       newSocket.on("connect_error", (error) => {
         console.log("Connection failed:", error);
-
-        if (retryCount < maxRetries) {
-          const newRetryCount = retryCount + 1;
-          set({ retryCount: newRetryCount });
-
-          const delay = get().retryDelay * Math.pow(2, newRetryCount - 1);
-          console.log(
-            `Retrying connection in ${delay}ms (attempt ${newRetryCount}/${maxRetries})`
-          );
-
-          toast.error(
-            `Connection failed. Retrying... (${newRetryCount}/${maxRetries})`
-          );
-
-          const retryTimeout = setTimeout(() => {
-            get().setSocket();
-          }, delay);
-
-          set({ retryTimeout });
-        } else {
-          console.log("Max retry attempts reached");
-          set({
-            isProcessing: false,
-            socket: null,
-            isOnline: false,
-            retryCount: 0,
-          });
-          toast.error("Unable to connect to server. Please try again later 💀");
-        }
       });
 
       newSocket.on("disconnect", (reason) => {
@@ -115,7 +86,7 @@ const socketStore = create<SocketStore>((set, get) => ({
 
       newSocket.on("reconnect", (attemptNumber) => {
         console.log("Reconnected after", attemptNumber, "attempts");
-        set({ isOnline: true, retryCount: 0 });
+        set({ isOnline: true });
         toast.success("Reconnected successfully 🔥");
       });
 
@@ -175,13 +146,7 @@ const socketStore = create<SocketStore>((set, get) => ({
   disconnect: () => {
     set({ isProcessing: true });
     try {
-      const { socket, retryTimeout } = get();
-
-      // Clear any pending retry attempts
-      if (retryTimeout) {
-        clearTimeout(retryTimeout);
-        set({ retryTimeout: null });
-      }
+      const { socket } = get();
 
       if (socket) {
         socket.disconnect();
@@ -191,7 +156,6 @@ const socketStore = create<SocketStore>((set, get) => ({
         isProcessing: false,
         socket: null,
         isOnline: false,
-        retryCount: 0,
       });
     } catch (error) {
       console.log("Error occurred during disconnect", error);
@@ -199,7 +163,6 @@ const socketStore = create<SocketStore>((set, get) => ({
         isProcessing: false,
         socket: null,
         isOnline: false,
-        retryCount: 0,
       });
     }
   },
@@ -249,16 +212,6 @@ const socketStore = create<SocketStore>((set, get) => ({
       socket.off("online-users");
     }
     set({ searchOnlineUserInterval: null });
-  },
-
-  // Helper method to manually retry connection
-  retryConnection: () => {
-    const { retryTimeout } = get();
-    if (retryTimeout) {
-      clearTimeout(retryTimeout);
-    }
-    set({ retryCount: 0, retryTimeout: null });
-    get().setSocket();
   },
 }));
 

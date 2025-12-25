@@ -11,7 +11,7 @@ export const searchUser: RequestHandler<
   { username: string }
 > = async (req, res, next) => {
   const { username } = req.query;
-  const currentUser = req.user.id;
+  const currentUser = req.user.userId;
   try {
     if (!username || !username.trim()) {
       res
@@ -149,5 +149,49 @@ export const updateUser: RequestHandler<
     });
   } catch (error) {
     next(error);
+  }
+};
+
+export const getPrevMessage: RequestHandler<
+  unknown,
+  unknown,
+  unknown,
+  { userId: string }
+> = async (req, res, next) => {
+  const { userId } = req.query;
+
+  try {
+    if (!userId) {
+      res.status(400).json([]);
+      return;
+    }
+
+    const user = await prismaClient.user.findFirst({
+      where: { id: userId },
+      include: {
+        conversations: {
+          include: {
+            participants: true,
+            messages: {
+              orderBy: { createdAt: "asc" },
+              include: {
+                sender: true,
+                receiver: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (!user) {
+      res.json([]);
+      return;
+    }
+
+    res.json(user.conversations);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
   }
 };

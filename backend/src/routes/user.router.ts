@@ -13,4 +13,6 @@ router.post(
   userController.updateUser
 );
 
+router.get("/user/conversation", ProtectedRoute, userController.getPrevMessage);
+
 export default router;

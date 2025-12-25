@@ -36,7 +36,7 @@ export const signUp: RequestHandler<
       throw createHttpError(400, "Unable to create account");
     }
 
-    const session = genToken(newUser.id);
+    const session = genToken(newUser.id, username, email);
 
     if (!session.success) {
       res.status(400).json({
@@ -88,7 +88,7 @@ export const signIn: RequestHandler<
       throw createHttpError(401, "Invalid credentials");
     }
 
-    const session = genToken(user.id);
+    const session = genToken(user.id, user.username, user.email);
 
     if (!session.success) {
       res.status(500).json({

@@ -3,6 +3,7 @@ import axios from "axios";
 import { create } from "zustand";
 import authStore from "./auth.store";
 
+// update user information
 type UpdateStateStore = updateStoreState & updateStoreActions;
 
 const updateStore = create<UpdateStateStore>((set, get) => ({

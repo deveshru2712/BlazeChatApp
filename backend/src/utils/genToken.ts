@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 import env from "./validateEnv";
 import { CookieOptions } from "express";
 
-const genToken = (userId: string) => {
+const genToken = (userId: string, userName: string, email: string) => {
   if (!userId || typeof userId !== "string") {
     return {
       success: false,
@@ -10,7 +10,9 @@ const genToken = (userId: string) => {
     };
   }
 
-  const token = jwt.sign({ userId }, env.JWT_KEY, { expiresIn: "7d" });
+  const token = jwt.sign({ userId, userName }, env.JWT_KEY, {
+    expiresIn: "7d",
+  });
 
   const cookieOption: CookieOptions = {
     httpOnly: true,

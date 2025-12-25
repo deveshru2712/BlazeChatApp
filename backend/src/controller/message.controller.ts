@@ -1,5 +1,4 @@
 import { RequestHandler } from "express";
-import { MessageType } from "../utils/schema/messageSchema";
 import prismaClient from "../utils/prismaClient";
 import { io } from "../socket";
 import { activeSockets } from "../socket";
@@ -10,7 +9,7 @@ export const getMessage: RequestHandler<
   unknown,
   unknown
 > = async (req, res, next) => {
-  const senderId = req.user.id;
+  const senderId = req.user.userId;
   const receiverId = req.params.receiverId;
 
   try {
@@ -51,12 +50,12 @@ export const getMessage: RequestHandler<
 export const sendMessage: RequestHandler<
   { receiverId: string },
   unknown,
-  MessageType,
+  unknown,
   unknown
 > = async (req, res, next) => {
-  const senderId = req.user.id;
+  const senderId = req.user.userId;
   const receiverId = req.params.receiverId;
-  const { message: content } = req.body;
+  const { content } = req.body as { content: string };
 
   try {
     if (!receiverId) {

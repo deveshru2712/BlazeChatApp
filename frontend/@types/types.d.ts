@@ -92,10 +92,6 @@ declare global {
     isProcessing: boolean;
     searchOnlineUserInterval: NodeJS.Timeout | null;
     refreshInterval: NodeJS.Timeout | null;
-    retryCount: number;
-    maxRetries: number;
-    retryDelay: number;
-    retryTimeout: NodeJS.Timeout | null;
   }
 
   interface SocketStoreActions {
@@ -106,7 +102,6 @@ declare global {
     clearHeartBeatInterval: () => void;
     getOnlineUser: () => void;
     clearOnlineUserSearch: () => void;
-    retryConnection: () => void;
   }
 
   // search store types
@@ -133,9 +128,11 @@ declare global {
     messageArr: Message[];
     isPending: boolean;
     currentConversationId: string | null;
+    recentConversation: Conversation[];
   }
 
   interface MessageStoreActions {
+    fetchRecentConversation: (userId: string) => Promise<void>;
     fetchingMessage: (receiverId: string) => Promise<void>;
     sendMessage: (
       receiverId: string,

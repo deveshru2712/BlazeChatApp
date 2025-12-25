@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { toast } from "sonner";
 import { create } from "zustand";
 
+// handels all the auth logic
 type AuthStore = AuthStoreState & AuthStoreActions;
 
 const authStore = create<AuthStore>((set, get) => ({
