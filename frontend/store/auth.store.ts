@@ -1,62 +1,67 @@
 import api from "@/utils/Axios";
-import { redirect } from "next/navigation";
 import { toast } from "sonner";
 import { create } from "zustand";
 
 // handels all the auth logic
 type AuthStore = AuthStoreState & AuthStoreActions;
 
-const authStore = create<AuthStore>((set, get) => ({
+const authStore = create<AuthStore>((set) => ({
   user: null,
   isLoading: false,
+  hasCheckedAuth: false,
+
   signUp: async (credentials) => {
     set({ isLoading: true });
     try {
-      const response = await api.post(`/api/auth/sign-up`, credentials);
-      set({ isLoading: false, user: response.data.newUser });
-      toast.success(response.data.message + "🔥");
-    } catch (error) {
-      console.log(error);
-      set({ isLoading: false, user: null });
+      const res = await api.post("/api/auth/sign-up", credentials);
+      set({ user: res.data.newUser, isLoading: false });
+      toast.success(res.data.message + " 🔥");
+    } catch (err) {
+      console.error(err);
+      set({ isLoading: false });
       toast.error("Unable to create an account");
     }
   },
+
   logIn: async (credentials) => {
     set({ isLoading: true });
     try {
-      const response = await api.post("/api/auth/sign-in", credentials);
-      set({ isLoading: false, user: response.data.user });
-      toast.success(response.data.message + "🔥");
-    } catch (error) {
-      console.log(error);
-      set({ isLoading: false, user: null });
+      const res = await api.post("/api/auth/sign-in", credentials);
+      set({ user: res.data.user, isLoading: false });
+      toast.success(res.data.message + " 🔥");
+    } catch (err) {
+      console.error(err);
+      set({ isLoading: false });
       toast.error("Unable to login");
     }
   },
+
   logOut: async () => {
     set({ isLoading: true });
     try {
-      const response = await api.post("/api/auth/logout");
-      set({ isLoading: false, user: null });
-      toast.success(response.data.message);
-      redirect("/");
-    } catch (error) {
-      console.log(error);
+      await api.post("/api/auth/logout");
+      set({ user: null, isLoading: false });
+      toast.success("Logged out");
+    } catch (err) {
+      console.error(err);
       set({ isLoading: false });
       toast.error("Unable to logout");
     }
   },
-  authCheck: async () => {
-    const { isLoading } = get();
-    if (isLoading) return;
 
-    set({ isLoading: true });
+  authCheck: async () => {
     try {
-      const response = await api("/api/auth/verify");
-      set({ isLoading: false, user: response.data.user });
-    } catch (error) {
-      console.log(error);
-      set({ isLoading: false, user: null });
+      const res = await api.get("/api/auth/verify");
+      set({
+        user: res.data.user,
+        hasCheckedAuth: true,
+      });
+    } catch (err) {
+      console.error(err);
+      set({
+        user: null,
+        hasCheckedAuth: true,
+      });
     }
   },
 }));

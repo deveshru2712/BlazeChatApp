@@ -73,6 +73,7 @@ declare global {
   interface AuthStoreState {
     user: User | null;
     isLoading: boolean;
+    hasCheckedAuth: boolean;
   }
 
   interface AuthStoreActions {
