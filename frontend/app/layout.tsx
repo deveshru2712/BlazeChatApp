@@ -6,6 +6,7 @@ import Blob from "@/components/Blob";
 import { Toaster } from "@/components/ui/sonner";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import AuthProvider from "./AuthProvider";
 
 const bricolage = Bricolage_Grotesque({
   variable: "--font-bricolage",
@@ -47,7 +48,9 @@ export default function RootLayout({
           <div className="h-screen w-screen fixed -z-50 pointer-events-none">
             <Blob />
           </div>
-          <div className="relative z-10 min-h-screen">{children}</div>
+          <AuthProvider>
+            <div className="relative z-10 min-h-screen">{children}</div>
+          </AuthProvider>
           <Analytics />
           <SpeedInsights />
         </ThemeProvider>

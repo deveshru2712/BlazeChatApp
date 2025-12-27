@@ -31,28 +31,35 @@ export const searchUser: RequestHandler<
       select: {
         id: true,
         username: true,
-        email: true,
         profilePicture: true,
-        conversations: {
+
+        conversationParticipants: {
           where: {
-            participants: {
-              some: {
-                id: currentUser,
+            conversation: {
+              type: "DIRECT",
+              participants: {
+                some: {
+                  userId: currentUser,
+                },
               },
             },
           },
           select: {
-            id: true,
-            messages: {
-              orderBy: {
-                createdAt: "desc",
-              },
-              take: 1,
+            conversation: {
               select: {
                 id: true,
-                content: true,
-                createdAt: true,
-                senderId: true,
+                messages: {
+                  orderBy: {
+                    createdAt: "desc",
+                  },
+                  take: 1,
+                  select: {
+                    id: true,
+                    content: true,
+                    createdAt: true,
+                    senderId: true,
+                  },
+                },
               },
             },
           },
@@ -134,12 +141,6 @@ export const updateUser: RequestHandler<
     const updateUser = await prismaClient.user.update({
       where: { id: userId },
       data: updateData,
-      select: {
-        id: true,
-        username: true,
-        email: true,
-        profilePicture: true,
-      },
     });
 
     res.status(200).json({
@@ -156,40 +157,36 @@ export const getPrevMessage: RequestHandler<
   unknown,
   unknown,
   unknown,
-  { userId: string }
+  { receiverId: string }
 > = async (req, res, next) => {
-  const { userId } = req.query;
+  const { receiverId } = req.query;
+  const senderId = req.user.userId;
 
   try {
-    if (!userId) {
+    if (!receiverId) {
       res.status(400).json([]);
       return;
     }
 
-    const user = await prismaClient.user.findFirst({
-      where: { id: userId },
+    const conversation = await prismaClient.conversation.findFirst({
+      where: {
+        type: "DIRECT",
+        directKey: [senderId, receiverId].sort().join("_"),
+      },
       include: {
-        conversations: {
-          include: {
-            participants: true,
-            messages: {
-              orderBy: { createdAt: "asc" },
-              include: {
-                sender: true,
-                receiver: true,
-              },
-            },
-          },
+        messages: {
+          orderBy: { createdAt: "desc" },
+          take: 1,
         },
       },
     });
 
-    if (!user) {
+    if (!conversation) {
       res.json([]);
       return;
     }
 
-    res.json(user.conversations);
+    res.json(conversation);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });

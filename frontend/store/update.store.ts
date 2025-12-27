@@ -17,11 +17,9 @@ const updateStore = create<UpdateStateStore>((set, get) => ({
       if (!user) {
         return;
       }
-      const response = await api.post(`/api/user/update`, formValue, {
+      await api.post(`/api/user/update`, formValue, {
         params: { userId: user.id },
       });
-
-      console.log(response.data);
 
       set({ isUpdating: false, formValue: null });
     } catch (error) {

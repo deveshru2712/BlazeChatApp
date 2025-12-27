@@ -1,23 +1,22 @@
 "use client";
-import Loader from "@/components/Loader";
-import authStore from "@/store/auth.store";
 import socketStore from "@/store/socket.store";
-import { useRouter, usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useRef } from "react";
 
-export default function Layout({ children }: { children: React.ReactNode }) {
-  const { user, isLoading, authCheck } = authStore();
+export default function MessageLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const {
     socket,
     setSocket,
-    isProcessing,
     disconnect,
     isOnline,
     getOnlineUser,
     startHeartBeat,
   } = socketStore();
   const router = useRouter();
-  const pathname = usePathname();
   const hasInitialized = useRef(false);
 
   useEffect(() => {
@@ -25,7 +24,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
     const initialize = async () => {
       hasInitialized.current = true;
-      await authCheck();
       setSocket();
     };
 
@@ -34,7 +32,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     return () => {
       disconnect();
     };
-  }, [authCheck, disconnect, router, setSocket]);
+  }, [disconnect, router, setSocket]);
 
   useEffect(() => {
     if (socket && isOnline) {
@@ -42,21 +40,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       startHeartBeat();
     }
   }, [getOnlineUser, startHeartBeat, isOnline, socket]);
-
-  if (isLoading || (!user && pathname !== "/sign-in") || isProcessing) {
-    return (
-      <div className="w-screen h-screen flex flex-col justify-center items-center gap-4">
-        <Loader />
-        <div className="text-lg font-semibold">
-          {isLoading
-            ? "Checking authentication..."
-            : isProcessing
-            ? "Connecting to server..."
-            : "Initializing application..."}
-        </div>
-      </div>
-    );
-  }
 
   return <>{children}</>;
 }

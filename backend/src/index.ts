@@ -1,6 +1,5 @@
 import "dotenv/config";
 import express, { NextFunction, Request, Response } from "express";
-import env from "./utils/validateEnv";
 import { z } from "zod";
 import cors from "cors";
 import createHttpError, { isHttpError } from "http-errors";
@@ -11,6 +10,8 @@ import authRouter from "./routes/auth.router";
 import messageRouter from "./routes/message.router";
 import userRouter from "./routes/user.router";
 
+import env from "./utils/validateEnv";
+
 import { app, server } from "./socket";
 
 app.use(morgan("dev"));
@@ -18,15 +19,15 @@ app.use(
   cors({
     origin: env.CLIENT_URL,
     credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
+    methods: ["GET", "POST", "PATCH", "DELETE"],
+    allowedHeaders: ["Content-Type"],
   })
 );
 app.use(express.json());
 app.use(cookieParser());
 
 app.get("/", (req, res) => {
-  res.send("hii there");
+  res.send("running successfully");
 });
 
 app.use("/api/auth", authRouter);

@@ -5,8 +5,19 @@ import inputValidator from "../middleware/inputValidator";
 
 const router = express.Router();
 
-router.get("/:receiverId", ProtectedRoute, messageController.getMessage);
+// direct route
+router.get(
+  "/direct/:receiverId",
+  ProtectedRoute,
+  messageController.getDirectMessage
+);
 
-router.post("/:receiverId", ProtectedRoute, messageController.sendMessage);
+router.post(
+  "/direct/:receiverId",
+  ProtectedRoute,
+  messageController.sendDirectMessage
+);
+
+// group route
 
 export default router;

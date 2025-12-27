@@ -81,7 +81,6 @@ export default function Page() {
 
   const { updateProfile } = updateStore();
   async function onSubmit(values: z.infer<typeof updateFormSchema>) {
-    console.log(values);
     await updateProfile(values);
     authCheck();
   }

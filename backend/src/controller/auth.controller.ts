@@ -76,7 +76,6 @@ export const signIn: RequestHandler<
         username: true,
         email: true,
         password: true,
-        profilePicture: true,
       },
     });
     if (!user) {
