@@ -23,9 +23,9 @@ export const activeSockets = new Map<string, string>();
 // userId -> number of active connections
 export const activeUsers = new Map<string, number>();
 
+// auth middleware
 io.use((socket, next) => {
   const userId = socket.handshake.auth?.userId;
-
   if (!userId || typeof userId !== "string") {
     return next(new Error("Unauthorized socket connection"));
   }
@@ -37,6 +37,7 @@ io.use((socket, next) => {
 io.on("connection", async (socket) => {
   const userId: string = socket.data.userId;
 
+  // TODO:remove this log
   console.log("Socket connected:", socket.id, "User:", userId);
 
   // prevent double registration

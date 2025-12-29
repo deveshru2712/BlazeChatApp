@@ -15,22 +15,24 @@ export default function MessageBox({
   onClick,
 }: MessageBoxProps) {
   const { classes } = useAppTheme();
-  const { onlineUser, socket } = socketStore();
+  const { socket } = socketStore();
   const [isOnline, setIsOnline] = useState(false);
 
-  useEffect(() => {
-    // Check online status whenever onlineUser changes
-    const checkOnlineStatus = () => {
-      const userIsOnline = onlineUser.some((user) => user === id);
-      setIsOnline(userIsOnline);
-    };
+  // TODO: implement this feature
 
-    checkOnlineStatus();
+  // useEffect(() => {
+  //   // Check online status whenever onlineUser changes
+  //   const checkOnlineStatus = () => {
+  //     const userIsOnline = onlineUser.some((user) => user === id);
+  //     setIsOnline(userIsOnline);
+  //   };
 
-    if (socket && onlineUser.length === 0) {
-      socket.emit("get-online-users");
-    }
-  }, [onlineUser, id, socket]);
+  //   checkOnlineStatus();
+
+  //   if (socket && onlineUser.length === 0) {
+  //     socket.emit("get-online-users");
+  //   }
+  // }, [onlineUser, id, socket]);
 
   return (
     <div

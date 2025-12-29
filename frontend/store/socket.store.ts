@@ -21,21 +21,23 @@ const socketStore = create<SocketStore>((set, get) => ({
     const { user } = authStore.getState();
     const existingSocket = get().socket;
 
-    if (!user) {
+    if (!user?.id) {
       console.warn("No user, socket not connected");
       return;
     }
 
     if (existingSocket) {
+      existingSocket.removeAllListeners();
       existingSocket.disconnect();
+      set({ socket: null });
     }
 
     set({ isProcessing: true });
 
-    const socket = io(process.env.NEXT_PUBLIC_BACKEND_URL!, {
+    const socket = io(process.env.NEXT_PUBLIC_BACKEND_URL, {
       transports: ["websocket"],
       auth: {
-        userId: user.id, // ✅ sent during handshake
+        userId: user.id,
       },
     });
 

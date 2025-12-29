@@ -1,45 +1,26 @@
 "use client";
+
 import socketStore from "@/store/socket.store";
-import { useRouter } from "next/navigation";
-import React, { useEffect, useRef } from "react";
+import authStore from "@/store/auth.store";
+import { useEffect } from "react";
 
 export default function MessageLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const {
-    socket,
-    setSocket,
-    disconnect,
-    isOnline,
-    getOnlineUser,
-    startHeartBeat,
-  } = socketStore();
-  const router = useRouter();
-  const hasInitialized = useRef(false);
+  const { user } = authStore();
+  const { setSocket, disconnect } = socketStore();
 
   useEffect(() => {
-    if (hasInitialized.current) return;
+    if (!user?.id) return;
 
-    const initialize = async () => {
-      hasInitialized.current = true;
-      setSocket();
-    };
-
-    initialize();
+    setSocket();
 
     return () => {
       disconnect();
     };
-  }, [disconnect, router, setSocket]);
-
-  useEffect(() => {
-    if (socket && isOnline) {
-      getOnlineUser();
-      startHeartBeat();
-    }
-  }, [getOnlineUser, startHeartBeat, isOnline, socket]);
+  }, [user, setSocket, disconnect]);
 
   return <>{children}</>;
 }
