@@ -1,16 +1,9 @@
 import { create } from "zustand";
-import { io, Socket } from "socket.io-client";
+import { io } from "socket.io-client";
 import authStore from "./auth.store";
 import { toast } from "sonner";
 
-type SocketStore = {
-  socket: Socket | null;
-  isOnline: boolean;
-  isProcessing: boolean;
-
-  setSocket: () => void;
-  disconnect: () => void;
-};
+type SocketStore = SocketStoreState & SocketStoreActions;
 
 const socketStore = create<SocketStore>((set, get) => ({
   socket: null,

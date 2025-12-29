@@ -86,23 +86,14 @@ declare global {
   // socket store types
 
   interface SocketStoreState {
-    onlineUser: string[];
     socket: Socket | null;
     isOnline: boolean;
-    isTyping: boolean;
     isProcessing: boolean;
-    searchOnlineUserInterval: NodeJS.Timeout | null;
-    refreshInterval: NodeJS.Timeout | null;
   }
 
   interface SocketStoreActions {
     setSocket: () => void;
     disconnect: () => void;
-    setIsTyping: (value: boolean) => void;
-    startHeartBeat: () => void;
-    clearHeartBeatInterval: () => void;
-    getOnlineUser: () => void;
-    clearOnlineUserSearch: () => void;
   }
 
   // search store types

@@ -1,9 +1,8 @@
 "use client";
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useAppTheme } from "@/hooks/useTheme";
 import dayjs from "dayjs";
-import socketStore from "@/store/socket.store";
 import { User } from "lucide-react";
 
 export default function MessageBox({
@@ -15,24 +14,9 @@ export default function MessageBox({
   onClick,
 }: MessageBoxProps) {
   const { classes } = useAppTheme();
-  const { socket } = socketStore();
   const [isOnline, setIsOnline] = useState(false);
 
-  // TODO: implement this feature
-
-  // useEffect(() => {
-  //   // Check online status whenever onlineUser changes
-  //   const checkOnlineStatus = () => {
-  //     const userIsOnline = onlineUser.some((user) => user === id);
-  //     setIsOnline(userIsOnline);
-  //   };
-
-  //   checkOnlineStatus();
-
-  //   if (socket && onlineUser.length === 0) {
-  //     socket.emit("get-online-users");
-  //   }
-  // }, [onlineUser, id, socket]);
+  // TODO: online status in the message box that is shown in the sidebar
 
   return (
     <div

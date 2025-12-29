@@ -8,17 +8,11 @@ const MessageNav = ({
   user: { username, id, profilePicture },
   isTyping,
 }: MessageNavProps) => {
-  // const { onlineUser } = socketStore();
-
+  const {} = socketStore();
   const [isOnline, setIsOnline] = useState(false);
   const { classes } = useAppTheme();
 
-  // TODO: implement this
-  // useEffect(() => {
-  //   // Check if the current user is in the onlineUser array
-  //   const userIsOnline = onlineUser.includes(id);
-  //   setIsOnline(userIsOnline);
-  // }, [onlineUser, id]);
+  // TODO: update the online status of the person i am currently talking to
 
   return (
     <div className="w-full px-4 py-2 h-14 border border-b rounded-2xl mb-5">
