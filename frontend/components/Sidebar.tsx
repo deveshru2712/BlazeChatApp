@@ -13,18 +13,17 @@ export default function Sidebar() {
   const router = useRouter();
   const { user } = authStore();
 
-  const { recentConversation, fetchRecentConversation } = messageStore();
+  const { fetchRecentConversation } = messageStore();
 
-  // useEffect(() => {
-  //   if (!user) return;
+  useEffect(() => {
+    if (!user?.id) return;
 
-  //   const loadConversations = async () => {
-  //     await fetchRecentConversation(user.id);
-  //     console.log("Recent Conversations:", recentConversation);
-  //   };
+    const loadConversations = async () => {
+      await fetchRecentConversation(user.id);
+    };
 
-  //   loadConversations();
-  // }, [user?.id]);
+    loadConversations();
+  }, [fetchRecentConversation, user]);
 
   const {
     searchUsername,
