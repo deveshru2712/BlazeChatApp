@@ -10,13 +10,23 @@ export const searchUser: RequestHandler<
   unknown,
   { username: string }
 > = async (req, res, next) => {
-  const { username } = req.query;
-  const currentUser = req.user.userId;
   try {
+    const { username } = req.query;
+    const currentUserId = req.user?.userId;
+
+    if (!currentUserId) {
+      res.status(401).json({
+        success: false,
+        message: "Unauthorized",
+      });
+      return;
+    }
+
     if (!username || !username.trim()) {
-      res
-        .status(400)
-        .json({ success: false, message: "Please provide a username" });
+      res.status(400).json({
+        success: false,
+        message: "Please provide a username",
+      });
       return;
     }
 
@@ -26,51 +36,84 @@ export const searchUser: RequestHandler<
           contains: username.trim(),
           mode: "insensitive",
         },
-        NOT: { id: currentUser },
+        NOT: { id: currentUserId },
       },
       select: {
         id: true,
         username: true,
         profilePicture: true,
+      },
+    });
 
-        conversationParticipants: {
-          where: {
-            conversation: {
-              type: "DIRECT",
-              participants: {
-                some: {
-                  userId: currentUser,
-                },
+    if (users.length === 0) {
+      res.json({
+        success: true,
+        users: [],
+      });
+      return;
+    }
+
+    const userIds = users.map((u) => u.id);
+
+    const conversations = await prismaClient.conversation.findMany({
+      where: {
+        type: "DIRECT",
+        AND: [
+          {
+            participants: {
+              some: { userId: currentUserId },
+            },
+          },
+          {
+            participants: {
+              some: {
+                userId: { in: userIds },
               },
             },
           },
+        ],
+      },
+      select: {
+        id: true,
+        participants: {
+          select: { userId: true },
+        },
+        messages: {
+          orderBy: { createdAt: "desc" },
+          take: 1,
           select: {
-            conversation: {
-              select: {
-                id: true,
-                messages: {
-                  orderBy: {
-                    createdAt: "desc",
-                  },
-                  take: 1,
-                  select: {
-                    id: true,
-                    content: true,
-                    createdAt: true,
-                    senderId: true,
-                  },
-                },
-              },
-            },
+            id: true,
+            content: true,
+            senderId: true,
+            createdAt: true,
           },
         },
       },
     });
 
+    const usersWithConversation = users.map((user) => {
+      const conversation = conversations.find((conv) =>
+        conv.participants.some((p) => p.userId === user.id)
+      );
+
+      return {
+        id: user.id,
+        username: user.username,
+        profilePicture: user.profilePicture,
+        conversation: conversation
+          ? {
+              id: conversation.id,
+              lastMessage: conversation.messages[0] ?? null,
+            }
+          : null,
+      };
+    });
+
     res.json({
       success: true,
-      users,
+      users: usersWithConversation,
     });
+    return;
   } catch (error) {
     next(error);
   }
