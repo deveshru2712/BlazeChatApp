@@ -1,5 +1,5 @@
 "use client";
-import Message from "@/components/Message";
+import Message from "@/components/message/Message";
 import Navbar from "@/components/Navbar";
 import Sidebar from "@/components/Sidebar";
 import searchStore from "@/store/search.store";

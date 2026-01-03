@@ -1,6 +1,12 @@
 "use client";
-import Navbar from "@/components/Navbar";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Camera, User } from "lucide-react";
+import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 import FormField from "@/components/FormField";
+import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -12,12 +18,6 @@ import {
 } from "@/components/ui/card";
 import { Form } from "@/components/ui/form";
 import authStore from "@/store/auth.store";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { User, Camera } from "lucide-react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { useEffect, useRef, useState } from "react";
-import Image from "next/image";
 import updateStore from "@/store/update.store";
 
 export default function Page() {
@@ -36,15 +36,10 @@ export default function Page() {
         .max(15, "Password must be less than 50 characters"),
       profilePicture: z.string().optional(),
     })
-    .refine(
-      (data) =>
-        data.email || data.profilePicture || data.username || data.password,
-      {
-        message:
-          "At least one field (username, email, or profile picture) must be provided",
-        path: ["root"],
-      }
-    );
+    .refine((data) => data.email || data.profilePicture || data.username || data.password, {
+      message: "At least one field (username, email, or profile picture) must be provided",
+      path: ["root"],
+    });
 
   const form = useForm<z.infer<typeof updateFormSchema>>({
     resolver: zodResolver(updateFormSchema),
@@ -141,9 +136,7 @@ export default function Page() {
               </div>
             </div>
             <CardTitle className="text-lg">Update your profile</CardTitle>
-            <CardDescription className="text-sm">
-              Update your profile information
-            </CardDescription>
+            <CardDescription className="text-sm">Update your profile information</CardDescription>
           </CardHeader>
           <CardContent className="py-3">
             <Form {...form}>
@@ -199,11 +192,7 @@ export default function Page() {
             </Form>
           </CardContent>
           <CardFooter className="pt-2">
-            <Button
-              type="submit"
-              className="w-full"
-              onClick={form.handleSubmit(onSubmit)}
-            >
+            <Button type="submit" className="w-full" onClick={form.handleSubmit(onSubmit)}>
               Update Profile
             </Button>
           </CardFooter>

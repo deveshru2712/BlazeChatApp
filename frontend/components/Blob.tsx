@@ -1,7 +1,7 @@
 "use client";
 
-import { useAppTheme } from "@/hooks/useTheme";
 import React from "react";
+import { useAppTheme } from "@/hooks/useTheme";
 
 export default function AnimatedBlobs() {
   const { classes } = useAppTheme();

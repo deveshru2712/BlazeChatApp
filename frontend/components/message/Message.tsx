@@ -1,14 +1,15 @@
 "use client";
 import { Send } from "lucide-react";
-import { Input } from "./ui/input";
-import MessageBubble from "./MessageBubble";
-import SkeletonBubble from "./skeletons/SkeletonBubble";
-import React, { useEffect, useRef } from "react";
-import MessageNav from "./MessageNav";
-import messageStore from "@/store/message.store";
-import authStore from "@/store/auth.store";
-import socketStore from "@/store/socket.store";
 import { useRouter } from "next/navigation";
+import type React from "react";
+import { useEffect, useRef } from "react";
+import MessageBubble from "@/components/message/MessageBubble";
+import MessageNav from "@/components/message/MessageNav";
+import SkeletonBubble from "@/components/skeletons/SkeletonBubble";
+import { Input } from "@/components/ui/input";
+import authStore from "@/store/auth.store";
+import messageStore from "@/store/message.store";
+import socketStore from "@/store/socket.store";
 
 export default function Message({ User }: MessageProps) {
   const {
@@ -62,9 +63,7 @@ export default function Message({ User }: MessageProps) {
     }
 
     const conversationId =
-      User?.conversations && User.conversations.length > 0
-        ? User.conversations[0].id
-        : null;
+      User?.conversations && User.conversations.length > 0 ? User.conversations[0].id : null;
 
     const handleKeyDown = () => {
       if (conversationId)
@@ -175,10 +174,7 @@ export default function Message({ User }: MessageProps) {
 
       {/* Message input */}
       <div className="w-full mt-4">
-        <form
-          onSubmit={onSubmitHandler}
-          className="w-full flex items-center gap-1"
-        >
+        <form onSubmit={onSubmitHandler} className="w-full flex items-center gap-1">
           <Input
             ref={inputRef}
             placeholder="Type here..."
@@ -188,9 +184,7 @@ export default function Message({ User }: MessageProps) {
             onKeyDown={(e) => {
               if (e.key === "Enter" && !e.shiftKey) {
                 e.preventDefault();
-                onSubmitHandler(
-                  e as unknown as React.FormEvent<HTMLFormElement>
-                );
+                onSubmitHandler(e as unknown as React.FormEvent<HTMLFormElement>);
               }
             }}
           />

@@ -1,6 +1,8 @@
 "use client";
-import React from "react";
 import { Settings } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
+import React from "react";
+import authStore from "@/store/auth.store";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,8 +11,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import authStore from "@/store/auth.store";
-import { usePathname, useRouter } from "next/navigation";
 
 interface SettingsButtonProps {
   className?: string;

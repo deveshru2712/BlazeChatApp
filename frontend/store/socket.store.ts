@@ -1,7 +1,7 @@
-import { create } from "zustand";
 import { io } from "socket.io-client";
-import authStore from "./auth.store";
 import { toast } from "sonner";
+import { create } from "zustand";
+import authStore from "./auth.store";
 
 type SocketStore = SocketStoreState & SocketStoreActions;
 

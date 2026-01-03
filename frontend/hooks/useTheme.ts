@@ -5,9 +5,7 @@ export const useAppTheme = () => {
   const { theme, resolvedTheme } = useTheme();
   const currentTheme = resolvedTheme || theme || "light";
 
-  const classes =
-    themeClasses[currentTheme as keyof typeof themeClasses] ||
-    themeClasses.light;
+  const classes = themeClasses[currentTheme as keyof typeof themeClasses] || themeClasses.light;
 
   return {
     theme: currentTheme,

@@ -1,6 +1,6 @@
-import api from "@/utils/Axios";
 import { toast } from "sonner";
 import { create } from "zustand";
+import api from "@/utils/Axios";
 
 // handels all the auth logic
 type AuthStore = AuthStoreState & AuthStoreActions;

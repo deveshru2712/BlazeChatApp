@@ -1,6 +1,6 @@
-import api from "@/utils/Axios";
 import axios from "axios";
 import { create } from "zustand";
+import api from "@/utils/Axios";
 import authStore from "./auth.store";
 
 // update user information
@@ -32,14 +32,8 @@ const updateStore = create<UpdateStateStore>((set, get) => ({
     try {
       const formData = new FormData();
       formData.append("file", file);
-      formData.append(
-        "upload_preset",
-        process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET
-      );
-      formData.append(
-        "cloud_name",
-        process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME
-      );
+      formData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET);
+      formData.append("cloud_name", process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME);
 
       const response = await axios.post(
         `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
@@ -48,7 +42,7 @@ const updateStore = create<UpdateStateStore>((set, get) => ({
           headers: {
             "Content-Type": "multipart/form-data",
           },
-        }
+        },
       );
 
       const { formValue: CurrentFormValue } = get();

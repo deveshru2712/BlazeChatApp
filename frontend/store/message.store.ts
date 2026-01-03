@@ -1,5 +1,5 @@
-import api from "@/utils/Axios";
 import { create } from "zustand";
+import api from "@/utils/Axios";
 import authStore from "./auth.store";
 import searchStore from "./search.store";
 
@@ -38,7 +38,7 @@ const messageStore = create<MessageStore>((set, get) => ({
   fetchingMessage: async (receiverId) => {
     set({ isPending: true });
     try {
-      const response = await api(`/api/message/${receiverId}`);
+      const response = await api(`/api/message/direct/${receiverId}`);
 
       set({
         messageArr: response.data.result || [],
@@ -107,7 +107,7 @@ const messageStore = create<MessageStore>((set, get) => ({
 
       setUserList(optimisticUserList);
 
-      const response = await api.post(`/api/message/${receiverId}`, {
+      const response = await api.post(`/api/message/direct/${receiverId}`, {
         message,
       });
 
@@ -151,12 +151,9 @@ const messageStore = create<MessageStore>((set, get) => ({
       const { messageArr: currentMessages } = get();
       set({
         messageArr: currentMessages.map((msg) =>
-          msg.id === optimisticMessage.id ? savedMessage : msg
+          msg.id === optimisticMessage.id ? savedMessage : msg,
         ),
       });
-
-      // Emit socket event with real message
-      socket.emit("send-message", savedMessage);
     } catch (error) {
       console.log(error);
 
@@ -165,9 +162,7 @@ const messageStore = create<MessageStore>((set, get) => ({
 
       set({
         messageArr: currentMessages.map((msg) =>
-          msg.id === optimisticMessage.id
-            ? { ...msg, status: "failed", error: true }
-            : msg
+          msg.id === optimisticMessage.id ? { ...msg, status: "failed", error: true } : msg,
         ),
       });
 
@@ -180,14 +175,9 @@ const messageStore = create<MessageStore>((set, get) => ({
               .map((conversation) => ({
                 ...conversation,
                 messages:
-                  conversation.messages?.filter(
-                    (msg) => msg.id !== optimisticMessage.id
-                  ) || [],
+                  conversation.messages?.filter((msg) => msg.id !== optimisticMessage.id) || [],
               }))
-              .filter(
-                (conversation) =>
-                  conversation.messages && conversation.messages.length > 0
-              ),
+              .filter((conversation) => conversation.messages && conversation.messages.length > 0),
           };
         }
         return user;

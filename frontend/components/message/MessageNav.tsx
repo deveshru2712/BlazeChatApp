@@ -1,13 +1,11 @@
 "use client";
+import { User } from "lucide-react";
+import Image from "next/image";
+import React, { useState } from "react";
 import { useAppTheme } from "@/hooks/useTheme";
 import socketStore from "@/store/socket.store";
-import Image from "next/image";
-import React, { useEffect, useState } from "react";
 
-const MessageNav = ({
-  user: { username, id, profilePicture },
-  isTyping,
-}: MessageNavProps) => {
+const MessageNav = ({ user: { username, id, profilePicture }, isTyping }: MessageNavProps) => {
   const {} = socketStore();
   const [isOnline, setIsOnline] = useState(false);
   const { classes } = useAppTheme();
@@ -19,13 +17,19 @@ const MessageNav = ({
       <div className="flex items-center h-full">
         <div className="flex items-center gap-3">
           <div className="relative flex-shrink-0">
-            <Image
-              src={profilePicture || "https://avatar.iran.liara.run/public"}
-              alt="profile_image"
-              height={40}
-              width={40}
-              className="w-10 h-10 object-cover rounded-full"
-            />
+            {profilePicture ? (
+              <Image
+                src={profilePicture || "https://avatar.iran.liara.run/public"}
+                alt="profile_image"
+                height={40}
+                width={40}
+                className="w-10 h-10 object-cover rounded-full"
+              />
+            ) : (
+              <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center flex-shrink-0">
+                <User className="w-6 h-6 text-gray-400" />
+              </div>
+            )}
             {/* Online status indicator */}
             {isOnline && (
               <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full shadow-sm z-10" />

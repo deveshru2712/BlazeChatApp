@@ -1,6 +1,6 @@
-import api from "@/utils/Axios";
 import { create } from "zustand";
-import { persist, createJSONStorage } from "zustand/middleware";
+import { createJSONStorage, persist } from "zustand/middleware";
+import api from "@/utils/Axios";
 
 // search for user
 type SearchStore = SearchStoreState & SearchStoreActions;
@@ -78,8 +78,8 @@ const searchStore = create<SearchStore>()(
         searchUsername: state.searchUsername,
         hasSearched: state.hasSearched,
       }),
-    }
-  )
+    },
+  ),
 );
 
 export default searchStore;

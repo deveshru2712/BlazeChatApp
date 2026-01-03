@@ -1,9 +1,9 @@
 "use client";
 
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { AlertTriangle } from "lucide-react";
 import { redirect } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 
 interface ErrorPageProps {
   title?: string;
@@ -29,10 +29,7 @@ export default function ErrorPage({
           <p className="text-gray-600 dark:text-gray-300 mb-6">{message}</p>
 
           {showBackButton && (
-            <Button
-              className="w-full py-3 text-lg"
-              onClick={() => redirect("/message")}
-            >
+            <Button className="w-full py-3 text-lg" onClick={() => redirect("/message")}>
               Go Back
             </Button>
           )}

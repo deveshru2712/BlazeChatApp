@@ -1,5 +1,5 @@
 import React from "react";
-import MessageNav from "../MessageNav";
+import MessageNav from "../message/MessageNav";
 
 export default function SkeletonMessage() {
   const dummyUser: User = {

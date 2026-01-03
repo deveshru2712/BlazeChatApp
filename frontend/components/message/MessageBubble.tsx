@@ -1,24 +1,16 @@
+import dayjs from "dayjs";
 import React from "react";
 import { useAppTheme } from "@/hooks/useTheme";
-import dayjs from "dayjs";
 
-export default function MessageBubble({
-  isMine,
-  message,
-  time,
-}: MessageBubbleProps) {
+export default function MessageBubble({ isMine, message, time }: MessageBubbleProps) {
   const { classes } = useAppTheme();
 
   const formattedTime = dayjs(time);
 
   return (
-    <div
-      className={`flex ${isMine ? "justify-end" : " justify-start"} mb-6 px-4`}
-    >
+    <div className={`flex ${isMine ? "justify-end" : " justify-start"} mb-6 px-4`}>
       <div
-        className={`flex items-end gap-3 max-w-[70%] ${
-          isMine ? "flex-row-reverse" : " flex-row"
-        }`}
+        className={`flex items-end gap-3 max-w-[70%] ${isMine ? "flex-row-reverse" : " flex-row"}`}
       >
         {/* Avatar */}
         <div

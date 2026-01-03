@@ -1,6 +1,6 @@
 "use client";
-import { useAppTheme } from "@/hooks/useTheme";
 import React from "react";
+import { useAppTheme } from "@/hooks/useTheme";
 
 interface SkeletonBubbleProps {
   isMyMessage: boolean;
@@ -10,15 +10,9 @@ export default function SkeletonBubble({ isMyMessage }: SkeletonBubbleProps) {
   const { classes } = useAppTheme();
 
   return (
-    <div
-      className={`flex ${
-        isMyMessage ? "justify-start" : "justify-end"
-      } mb-6 px-4`}
-    >
+    <div className={`flex ${isMyMessage ? "justify-start" : "justify-end"} mb-6 px-4`}>
       <div
-        className={`flex items-end gap-3 w-1/2 ${
-          isMyMessage ? "flex-row" : "flex-row-reverse"
-        }`}
+        className={`flex items-end gap-3 w-1/2 ${isMyMessage ? "flex-row" : "flex-row-reverse"}`}
       >
         {/* Avatar Skeleton */}
         <div
@@ -40,9 +34,7 @@ export default function SkeletonBubble({ isMyMessage }: SkeletonBubbleProps) {
               {/* First line skeleton */}
               <div
                 className={`h-4 rounded-full animate-pulse ${
-                  isMyMessage
-                    ? "bg-white/30"
-                    : "bg-slate-300/70 dark:bg-slate-600/50"
+                  isMyMessage ? "bg-white/30" : "bg-slate-300/70 dark:bg-slate-600/50"
                 }`}
                 style={{ width: Math.random() * 40 + 60 + "%" }}
               ></div>
@@ -51,9 +43,7 @@ export default function SkeletonBubble({ isMyMessage }: SkeletonBubbleProps) {
               {Math.random() > 0.5 && (
                 <div
                   className={`h-4 rounded-full animate-pulse ${
-                    isMyMessage
-                      ? "bg-white/30"
-                      : "bg-slate-300/70 dark:bg-slate-600/50"
+                    isMyMessage ? "bg-white/30" : "bg-slate-300/70 dark:bg-slate-600/50"
                   }`}
                   style={{ width: Math.random() * 60 + 40 + "%" }}
                 ></div>

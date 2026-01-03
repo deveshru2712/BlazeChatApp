@@ -1,22 +1,17 @@
 "use client";
+import { Search } from "lucide-react";
+import { useRouter } from "next/navigation";
+import type React from "react";
+import { useMemo } from "react";
+import MessageBox from "@/components/message/MessageBox";
+import SkeletonMessageBox from "@/components/skeletons/SkeletonMessageBox";
 import { getLatestMessage } from "@/lib/getLatestMessage";
 import searchStore from "@/store/search.store";
-import { Search } from "lucide-react";
-import React, { useMemo } from "react";
-import SkeletonMessageBox from "./skeletons/SkeletonMessageBox";
-import MessageBox from "./MessageBox";
-import { useRouter } from "next/navigation";
 
 const MobileSearchBar = () => {
   const router = useRouter();
-  const {
-    searchUsername,
-    userList,
-    isSearching,
-    hasSearched,
-    setSearchUsername,
-    setReceiverUser,
-  } = searchStore();
+  const { searchUsername, userList, isSearching, hasSearched, setSearchUsername, setReceiverUser } =
+    searchStore();
 
   const onSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

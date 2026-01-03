@@ -1,11 +1,8 @@
 "use client";
-import React, { useEffect, useRef } from "react";
+import type React from "react";
+import { useEffect, useRef } from "react";
 
-export default function SettingLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function SettingLayout({ children }: { children: React.ReactNode }) {
   const hasInitialized = useRef(false);
 
   useEffect(() => {

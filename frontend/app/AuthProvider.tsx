@@ -1,17 +1,13 @@
 "use client";
 
-import { useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import authStore from "@/store/auth.store";
+import { useEffect } from "react";
 import Loader from "@/components/Loader";
+import authStore from "@/store/auth.store";
 
 const PUBLIC_ROUTES = ["/", "/sign-in", "/sign-up"];
 
-export default function AuthProvider({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function AuthProvider({ children }: { children: React.ReactNode }) {
   const { user, hasCheckedAuth, authCheck } = authStore();
 
   const router = useRouter();

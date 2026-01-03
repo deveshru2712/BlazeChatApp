@@ -1,13 +1,14 @@
 "use client";
-import React, { useEffect, useMemo } from "react";
-import MessageBox from "./MessageBox";
-import { Input } from "./ui/input";
-import SkeletonMessageBox from "./skeletons/SkeletonMessageBox";
 import { useRouter } from "next/navigation";
-import searchStore from "@/store/search.store";
+import type React from "react";
+import { useEffect, useMemo } from "react";
 import { getLatestMessage } from "@/lib/getLatestMessage";
-import messageStore from "@/store/message.store";
 import authStore from "@/store/auth.store";
+import messageStore from "@/store/message.store";
+import searchStore from "@/store/search.store";
+import MessageBox from "./message/MessageBox";
+import SkeletonMessageBox from "./skeletons/SkeletonMessageBox";
+import { Input } from "./ui/input";
 
 export default function Sidebar() {
   const router = useRouter();
@@ -25,14 +26,8 @@ export default function Sidebar() {
     loadConversations();
   }, [fetchRecentConversation, user]);
 
-  const {
-    searchUsername,
-    userList,
-    isSearching,
-    hasSearched,
-    setSearchUsername,
-    setReceiverUser,
-  } = searchStore();
+  const { searchUsername, userList, isSearching, hasSearched, setSearchUsername, setReceiverUser } =
+    searchStore();
 
   const onSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -83,9 +78,7 @@ export default function Sidebar() {
         })
       ) : (
         <div className="font-semibold text-center my-10">
-          {hasSearched
-            ? `No user found for ${searchUsername}`
-            : " Start messaging your friend..."}
+          {hasSearched ? `No user found for ${searchUsername}` : " Start messaging your friend..."}
         </div>
       )}
     </div>

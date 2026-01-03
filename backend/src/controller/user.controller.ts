@@ -15,10 +15,7 @@ export const searchUser: RequestHandler<
     const currentUserId = req.user?.userId;
 
     if (!currentUserId) {
-      res.status(401).json({
-        success: false,
-        message: "Unauthorized",
-      });
+      res.status(401).json({ success: false, message: "Unauthorized" });
       return;
     }
 
@@ -33,11 +30,12 @@ export const searchUser: RequestHandler<
     const users = await prismaClient.user.findMany({
       where: {
         username: {
-          contains: username.trim(),
+          startsWith: username.trim(),
           mode: "insensitive",
         },
         NOT: { id: currentUserId },
       },
+      take: 20,
       select: {
         id: true,
         username: true,
@@ -46,10 +44,7 @@ export const searchUser: RequestHandler<
     });
 
     if (users.length === 0) {
-      res.json({
-        success: true,
-        users: [],
-      });
+      res.json({ success: true, users: [] });
       return;
     }
 
@@ -58,20 +53,14 @@ export const searchUser: RequestHandler<
     const conversations = await prismaClient.conversation.findMany({
       where: {
         type: "DIRECT",
-        AND: [
-          {
-            participants: {
-              some: { userId: currentUserId },
-            },
+        participants: {
+          some: { userId: currentUserId },
+        },
+        AND: {
+          participants: {
+            some: { userId: { in: userIds } },
           },
-          {
-            participants: {
-              some: {
-                userId: { in: userIds },
-              },
-            },
-          },
-        ],
+        },
       },
       select: {
         id: true,
@@ -91,10 +80,19 @@ export const searchUser: RequestHandler<
       },
     });
 
-    const usersWithConversation = users.map((user) => {
-      const conversation = conversations.find((conv) =>
-        conv.participants.some((p) => p.userId === user.id)
+    const conversationMap = new Map<string, (typeof conversations)[0]>();
+
+    for (const conv of conversations) {
+      const otherUser = conv.participants.find(
+        (p) => p.userId !== currentUserId
       );
+      if (otherUser) {
+        conversationMap.set(otherUser.userId, conv);
+      }
+    }
+
+    const result = users.map((user) => {
+      const conversation = conversationMap.get(user.id);
 
       return {
         id: user.id,
@@ -109,10 +107,7 @@ export const searchUser: RequestHandler<
       };
     });
 
-    res.json({
-      success: true,
-      users: usersWithConversation,
-    });
+    res.json({ success: true, users: result });
     return;
   } catch (error) {
     next(error);

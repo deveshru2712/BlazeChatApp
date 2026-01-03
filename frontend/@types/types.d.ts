@@ -126,11 +126,7 @@ declare global {
   interface MessageStoreActions {
     fetchRecentConversation: (userId: string) => Promise<void>;
     fetchingMessage: (receiverId: string) => Promise<void>;
-    sendMessage: (
-      receiverId: string,
-      message: string,
-      socket: Socket
-    ) => Promise<void>;
+    sendMessage: (receiverId: string, message: string, socket: Socket) => Promise<void>;
     setMessage: (message: string) => void;
     setCurrentConversationId: (conversationId: string) => void;
     setMessageArr: (MessageArr: Message[]) => void;

@@ -1,9 +1,9 @@
 "use client";
+import dayjs from "dayjs";
+import { User } from "lucide-react";
 import Image from "next/image";
 import React, { useState } from "react";
 import { useAppTheme } from "@/hooks/useTheme";
-import dayjs from "dayjs";
-import { User } from "lucide-react";
 
 export default function MessageBox({
   username,
@@ -19,10 +19,7 @@ export default function MessageBox({
   // TODO: online status in the message box that is shown in the sidebar
 
   return (
-    <div
-      onClick={onClick}
-      className="w-full px-2 h-20 rounded-md cursor-pointer relative group"
-    >
+    <div onClick={onClick} className="w-full px-2 h-20 rounded-md cursor-pointer relative group">
       {/* Gradient border on hover */}
       <div className="absolute inset-1 -z-10 bg-slate-400/50 group-hover:bg-gradient-to-r group-hover:from-blue-500 group-hover:to-purple-600 rounded-md transition-all duration-500" />
 
@@ -54,14 +51,10 @@ export default function MessageBox({
         <div className="w-full flex flex-col justify-center min-w-0">
           <div className="flex justify-between items-start">
             <div>
-              <h2
-                className={`${classes.textPrimary} font-semibold text-lg truncate`}
-              >
+              <h2 className={`${classes.textPrimary} font-semibold text-lg truncate`}>
                 {username}
               </h2>
-              <div
-                className={`${classes.textSecondary} font-medium text-base truncate`}
-              >
+              <div className={`${classes.textSecondary} font-medium text-base truncate`}>
                 {latestMessage && latestMessage.length > 35
                   ? `${latestMessage.slice(0, 35)}...`
                   : latestMessage || "No messages yet"}

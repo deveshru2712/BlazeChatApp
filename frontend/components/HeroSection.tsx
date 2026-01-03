@@ -15,8 +15,7 @@ export default function Hero() {
           <p className="mx-auto text-sm md:text-xl text-slate-800 dark:text-white/90 max-w-2xl mt-4 font-medium leading-relaxed">
             Experience lightning-fast messaging with AI-powered smarts.
             <br className="hidden md:block" />
-            Connect effortlessly—no fluff, just meaningful chats that spark and
-            flow.
+            Connect effortlessly—no fluff, just meaningful chats that spark and flow.
           </p>
 
           <div className="mt-8">

@@ -1,16 +1,15 @@
 "use client";
-import React from "react";
-import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-
-import { Form } from "./ui/form";
-import { Button } from "./ui/button";
-import FormField from "./FormField";
-import { useRouter } from "next/navigation";
-import authStore from "@/store/auth.store";
 import { useAppTheme } from "@/hooks/useTheme";
+import authStore from "@/store/auth.store";
+import FormField from "./FormField";
+import { Button } from "./ui/button";
+import { Form } from "./ui/form";
 
 const authFormSchema = (type: FormType) => {
   return z.object({
@@ -21,10 +20,7 @@ const authFormSchema = (type: FormType) => {
             .min(3, "Username must be at least 3 characters long")
             .max(15, "Username must be less than 20 characters")
         : z.string().optional(),
-    email: z
-      .string()
-      .email("Please enter a valid email address")
-      .min(1, "Email is required"),
+    email: z.string().email("Please enter a valid email address").min(1, "Email is required"),
     password: z
       .string()
       .min(6, "Password must be at least 6 characters long")
@@ -62,18 +58,14 @@ export default function AuthForm({ type }: { type: FormType }) {
       await logIn(values);
       router.push("/message");
     } else {
-      await signUp(
-        values as { username: string; email: string; password: string }
-      );
+      await signUp(values as { username: string; email: string; password: string });
       router.push("/message");
     }
   };
 
   return (
     <div className="w-screen h-screen flex justify-center items-center px-6">
-      <div
-        className={`${classes.border} border shadow-md lg:min-w-[566px] px-8 py-6 rounded-2xl`}
-      >
+      <div className={`${classes.border} border shadow-md lg:min-w-[566px] px-8 py-6 rounded-2xl`}>
         <div className="flex flex-col items-center gap-4">
           <h1 className="text-2xl md:text-4xl font-bold">
             {type == "sign-in" ? (
@@ -100,10 +92,7 @@ export default function AuthForm({ type }: { type: FormType }) {
         </div>
         <div>
           <Form {...form}>
-            <form
-              className="w-full space-y-6 mt-4"
-              onSubmit={form.handleSubmit(onSubmit)}
-            >
+            <form className="w-full space-y-6 mt-4" onSubmit={form.handleSubmit(onSubmit)}>
               {type == "sign-up" && (
                 <FormField
                   control={form.control}
@@ -133,24 +122,19 @@ export default function AuthForm({ type }: { type: FormType }) {
               <Button
                 type="submit"
                 className="w-full bg-gradient-to-r from-orange-400 to-red-400 text-white text-lg font-semibold cursor-pointer py-2 active:scale-105 duration-300 transition-all hover:shadow-lg hover:shadow-orange-400/30"
-                disabled={
-                  !form.formState.isValid || form.formState.isSubmitting
-                }
+                disabled={!form.formState.isValid || form.formState.isSubmitting}
               >
                 {form.formState.isSubmitting
                   ? "Processing..."
                   : type == "sign-in"
-                  ? "Sign in"
-                  : "Create an account"}
+                    ? "Sign in"
+                    : "Create an account"}
               </Button>
             </form>
           </Form>
           <p className={`text-center font-semibold text-lg mt-3`}>
             {type == "sign-in" ? "No account yet?" : "Already have an account?"}
-            <Link
-              href={type != "sign-in" ? "/sign-in" : "/sign-up"}
-              className="ml-0.5"
-            >
+            <Link href={type != "sign-in" ? "/sign-in" : "/sign-up"} className="ml-0.5">
               <span className="font-bold  animated-warm-gradient-text">
                 {type != "sign-in" ? "Sign in" : "Sign up"}
               </span>

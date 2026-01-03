@@ -1,7 +1,7 @@
-import MobileSearchBar from "@/components/MobileSearchBar ";
+import { MessageCircle, Search, Users } from "lucide-react";
+import MobileSearchBar from "@/components/message/MobileSearchBar ";
 import Navbar from "@/components/Navbar";
 import Sidebar from "@/components/Sidebar";
-import { MessageCircle, Search, Users } from "lucide-react";
 
 export default function Page() {
   return (
@@ -27,8 +27,7 @@ export default function Page() {
             <div className="space-y-3">
               <h2 className="text-2xl font-bold">Start a Conversation</h2>
               <p className="leading-relaxed">
-                Search for a friends name in the search box above to begin your
-                chat journey
+                Search for a friends name in the search box above to begin your chat journey
               </p>
             </div>
           </div>

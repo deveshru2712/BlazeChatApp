@@ -1,9 +1,9 @@
 "use client";
 import Link from "next/link";
 import React from "react";
-import { Toggle } from "./Toggle";
-import { SettingsButton } from "./SettingButton";
 import authStore from "@/store/auth.store";
+import { SettingsButton } from "./SettingButton";
+import { Toggle } from "./Toggle";
 
 export default function Navbar() {
   const { user } = authStore();
@@ -20,9 +20,7 @@ export default function Navbar() {
         </div>
         <div>
           <div className="flex items-center gap-5">
-            {user && (
-              <SettingsButton className="opacity-100 p-2 outline rounded-md" />
-            )}
+            {user && <SettingsButton className="opacity-100 p-2 outline rounded-md" />}
             <Toggle />
           </div>
         </div>
